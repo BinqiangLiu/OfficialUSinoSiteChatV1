@@ -21,7 +21,6 @@ load_dotenv()
 
 os.environ['OPENAI_API_KEY']
 os.environ['openai_api_key']
-="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"
 hf_token = os.environ.get('HUGGINGFACEHUB_API_TOKEN')
 repo_id = os.environ.get('repo_id')
 #port = os.getenv('port')
