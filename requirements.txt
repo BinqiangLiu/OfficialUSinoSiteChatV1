@@ -1,0 +1,9 @@
+langchain
+openai
+streamlit
+python-dotenv
+tiktoken
+huggingface_hub
+langchain
+Requests
+pinecone-client
