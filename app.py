@@ -19,6 +19,13 @@ from langchain.chat_models import ChatOpenAI
 from dotenv import load_dotenv
 load_dotenv()
 
+st.set_page_config(page_title="USinoIP Website AI Chat Assistant", layout="wide")
+st.subheader("Welcome to USinoIP Website AI Chat Assistant.")
+
+css_file = "main.css"
+with open(css_file) as f:
+    st.markdown("<style>{}</style>".format(f.read()), unsafe_allow_html=True)
+
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
 openai_api_key = os.environ.get('openai_api_key')
 embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
