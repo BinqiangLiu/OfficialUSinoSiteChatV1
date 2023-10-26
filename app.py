@@ -19,14 +19,17 @@ import nltk
 from dotenv import load_dotenv
 load_dotenv()
 
-
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
 openai_api_key = os.environ.get('openai_api_key')
 hf_token = os.environ.get('HUGGINGFACEHUB_API_TOKEN')
 HUGGINGFACEHUB_API_TOKEN = os.environ.get('HUGGINGFACEHUB_API_TOKEN')
 huggingfacehub_api_token= os.environ.get('huggingfacehub_api_token')
 repo_id = os.environ.get('repo_id')
-
+pinecone_index_name=os.environ.get('pinecone_index_name')
+pinecone_namespace=os.environ.get('pinecone_namespace')
+pinecone_api_key=os.environ.get('pinecone_api_key')
+pinecone_environment=os.environ.get('pinecone_environment')
+index = pinecone.Index(pinecone_index_name)
 
 embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 
