@@ -21,26 +21,23 @@ load_dotenv()
 
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
 openai_api_key = os.environ.get('openai_api_key')
-hf_token = os.environ.get('HUGGINGFACEHUB_API_TOKEN')
-HUGGINGFACEHUB_API_TOKEN = os.environ.get('HUGGINGFACEHUB_API_TOKEN')
-huggingfacehub_api_token= os.environ.get('huggingfacehub_api_token')
-repo_id = os.environ.get('repo_id')
+embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
+
 pinecone_index_name=os.environ.get('pinecone_index_name')
 pinecone_namespace=os.environ.get('pinecone_namespace')
 pinecone_api_key=os.environ.get('pinecone_api_key')
 pinecone_environment=os.environ.get('pinecone_environment')
-index = pinecone.Index(pinecone_index_name)
-
-embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
-
 pinecone.init(      
-	api_key='ede03f83-2fbf-4719-b56a-91daec890b54',      
-	environment='northamerica-northeast1-gcp'      
+	api_key=pinecone_api_key,      
+	environment=pinecone_environment      
 )      
-index = pinecone.Index('usinositevdb-openaiembedding')
+index = pinecone.Index(pinecone_index_name)
+loaded_v_db_500_wt_metadata = Pinecone.from_existing_index(index_name=index_name, embedding=embeddings, namespace=namespace)
 
-index_name='usinositevdb-openaiembedding'
-namespace='500_wt_metadata'
+hf_token = os.environ.get('HUGGINGFACEHUB_API_TOKEN')
+HUGGINGFACEHUB_API_TOKEN = os.environ.get('HUGGINGFACEHUB_API_TOKEN')
+huggingfacehub_api_token= os.environ.get('huggingfacehub_api_token')
+repo_id = os.environ.get('repo_id')
 
 prompt_template = """
 #You are a very helpful AI assistant. Please ONLY use {context} to answer the user's input question. If you don't know the answer, just say that you don't know. DON'T try to make up an answer and do NOT go beyond the given context without the user's explicitly asking you to do so!
@@ -49,12 +46,6 @@ Question: {question}
 Helpful AI Repsonse:
 """
 PROMPT = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
-#PROMPT
-#PromptTemplate(input_variables=['context', 'question'], template="\n#You are a very helpful AI assistant. Please ONLY use {context} to answer the user's input question. If you don't know the answer, just say that you don't know. DON'T try to make up an answer and do NOT go beyond the given context without the user's explicitly asking you to do so!\nYou are a very helpful AI assistant. Please response to the user's input question with as many details as possible.\nQuestion: {question}\nHelpful AI Repsonse:\n")
-
-loaded_v_db_500_wt_metadata = Pinecone.from_existing_index(index_name=index_name, embedding=embeddings, namespace=namespace)
-
-user_query=st.text_input("Enter your query:")
 
 llm = HuggingFaceHub(repo_id=repo_id,
                      #huggingfacehub_api_token="hf_p***K",
@@ -65,6 +56,8 @@ llm = HuggingFaceHub(repo_id=repo_id,
                                    "top_k":50,
                                    "top_p":0.95, "eos_token_id":49155}) 
 
+
+user_query=st.text_input("Enter your query:")
 memory_NEW = ConversationBufferMemory(memory_key="chat_history", return_messages= True)
 loaded_doc_retriever = loaded_v_db_500_wt_metadata.as_retriever(search_type="similarity", search_kwargs={"k":2})
 new_ConverRtr_chain = ConversationalRetrievalChain.from_llm(llm, retriever=loaded_doc_retriever, memory=memory_NEW)
