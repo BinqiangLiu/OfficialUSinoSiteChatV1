@@ -15,7 +15,7 @@ from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
 import os
 from langchain.chat_models import ChatOpenAI
-import nltk
+#import nltk
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -27,12 +27,13 @@ pinecone_index_name=os.environ.get('pinecone_index_name')
 pinecone_namespace=os.environ.get('pinecone_namespace')
 pinecone_api_key=os.environ.get('pinecone_api_key')
 pinecone_environment=os.environ.get('pinecone_environment')
+pinecone_index_name=os.environ.get('pinecone_index_name')
 pinecone.init(      
 	api_key=pinecone_api_key,      
 	environment=pinecone_environment      
 )      
 index = pinecone.Index(pinecone_index_name)
-loaded_v_db_500_wt_metadata = Pinecone.from_existing_index(index_name=index_name, embedding=embeddings, namespace=namespace)
+loaded_v_db_500_wt_metadata = Pinecone.from_existing_index(index_name=pinecone_index_name, embedding=embeddings, namespace=pinecone_namespace)
 
 hf_token = os.environ.get('HUGGINGFACEHUB_API_TOKEN')
 HUGGINGFACEHUB_API_TOKEN = os.environ.get('HUGGINGFACEHUB_API_TOKEN')
