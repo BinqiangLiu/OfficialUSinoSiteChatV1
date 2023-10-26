@@ -64,17 +64,14 @@ llm = HuggingFaceHub(repo_id=repo_id,
                                    "top_k":50,
                                    "top_p":0.95, "eos_token_id":49155}) 
 
-
-user_query=st.text_input("Enter your query:")
 memory_NEW = ConversationBufferMemory(memory_key="chat_history", return_messages= True)
 loaded_doc_retriever = loaded_v_db_500_wt_metadata.as_retriever(search_type="similarity", search_kwargs={"k":2})
 new_ConverRtr_chain = ConversationalRetrievalChain.from_llm(llm, retriever=loaded_doc_retriever, memory=memory_NEW)
-new_ConverRtr_chain_result=new_ConverRtr_chain({'question': user_query})
-ai_response=new_ConverRtr_chain_result['answer']
-st.write("AI Response:")
-st.write(ai_response)
 
-
-
-
-         
+user_question=st.text_input("Enter your query:")
+if user_question !="" and not user_question.strip().isspace() and not user_question == "" and not user_question.strip() == "" and not user_question.isspace():
+    with st.spinner("AI Thinking...Please wait a while to Cheers!"):
+        new_ConverRtr_chain_result=new_ConverRtr_chain({'question': user_question})
+        ai_response=new_ConverRtr_chain_result['answer']
+        st.write("AI Response:")
+        st.write(ai_response)       
